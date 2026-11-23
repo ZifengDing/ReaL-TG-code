@@ -4,6 +4,8 @@ import os
 import argparse
 from tqdm import tqdm
 
+os.environ["OPENAI_API_KEY"] = YOUR_OPENAI_API_KEY
+
 def main():
     """
     Main function to run OpenAI generation on a JSONL file.

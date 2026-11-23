@@ -1,8 +1,8 @@
 #!/bin/bash
-# Log in to Weights & Biases first (`wandb login`) or export WANDB_API_KEY.
 export WANDB_BASE_URL=https://api.wandb.ai
 export WANDB_MODE=online
-eval "$(conda shell.bash hook)"
+export WANDB_API_KEY=YOUR_WANDB_API_KEY
+source YOUR_CONDA_SOURCE
 conda activate graphrl
 
 data_path=dataset/realtg/test.parquet
