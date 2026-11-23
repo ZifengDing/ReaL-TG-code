@@ -1,16 +1,19 @@
 #!/bin/bash
+# Log in to Weights & Biases first (`wandb login`) or export WANDB_API_KEY.
 export WANDB_BASE_URL=https://api.wandb.ai
 export WANDB_MODE=online
-export WANDB_API_KEY=YOUR_WANDB_API_KEY
-source YOUR_CONDA_SOURCE
+eval "$(conda shell.bash hook)"
 conda activate graphrl
+
+# Run from PATH_TO_VERL/recipe/tgrl (or set TGRL_DIR to it); data and reward paths are absolute from there
+TGRL_DIR="${TGRL_DIR:-$(pwd)}"
 
 nvidia-smi
 
 python3 -m verl.trainer.main_ppo \
     algorithm.adv_estimator=grpo \
-    data.train_files=/dataset/realtg/train.parquet \
-    data.val_files=/dataset/realtg/val.parquet \
+    data.train_files="$TGRL_DIR/dataset/realtg/train.parquet" \
+    data.val_files="$TGRL_DIR/dataset/realtg/val.parquet" \
     data.train_batch_size=32 \
     data.max_prompt_length=8192 \
     data.max_response_length=16384 \
@@ -37,7 +40,7 @@ python3 -m verl.trainer.main_ppo \
     actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu=1 \
     actor_rollout_ref.ref.fsdp_config.param_offload=True \
     algorithm.use_kl_in_reward=False \
-    custom_reward_function.path=/reward_tgrl.py \
+    custom_reward_function.path="$TGRL_DIR/reward_tgrl.py" \
     custom_reward_function.name=compute_score_list \
     trainer.critic_warmup=0 \
     trainer.logger=['console','wandb'] \

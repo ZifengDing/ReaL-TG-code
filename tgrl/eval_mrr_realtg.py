@@ -1,3 +1,4 @@
+import argparse
 import sys
 from tgb.linkproppred.evaluate import Evaluator
 from tgb.linkproppred.dataset import LinkPropPredDataset
@@ -88,6 +89,13 @@ def extract_jsonl_info(jsonl_path):
     print("multiple answer count:", multiple_ans_cnt)
     return results, results_compact
 
+parser = argparse.ArgumentParser(description="Compute MRR, penalized MRR and accuracy of model generations on the ReaL-TG test set.")
+parser.add_argument("--input", default="logs/test_generation/realtg/test_realtg_4b.json",
+                    help="JSON file with model generations (written by logs/test_generation/read_parquet.py)")
+parser.add_argument("--output", default="logs/test_generation/realtg/test_realtg_4b_eval.txt",
+                    help="where to write the evaluation results")
+args = parser.parse_args()
+
 name = "tgbl-wiki"
 dataset = LinkPropPredDataset(name=name, root="datasets", preprocess=True)
 neg_sampler = dataset.negative_sampler
@@ -95,7 +103,7 @@ dataset.load_test_ns()
 metric = dataset.eval_metric
 evaluator = Evaluator(name="tgbl-wiki")
 
-jsonl_file = YOUR_PATH_TO_LLM_GENERATION
+jsonl_file = args.input
 info, info_compact = extract_jsonl_info(jsonl_file)
 
 scores = []
@@ -158,7 +166,7 @@ for item in tqdm(info):
 
 
 # Open a file to write the output
-sys.stdout = open(YOUR_PATH_TO_EVAL_OUTPUT, 'w')
+sys.stdout = open(args.output, 'w')
 
 # print("correct idx:", correct_idx)
 print("###################")
