@@ -1,0 +1,38 @@
+# Original submission archives (kept locally, not part of the repo)
+*.zip
+
+# OS / editor files
+.DS_Store
+__MACOSX/
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# API keys (llm_judge.py reads OPENAI_API_KEY from .env)
+.env
+
+# TGB downloads and data-construction outputs
+datasets/
+processed_TG/
+
+# Training outputs (verl / hydra / wandb)
+checkpoints/
+outputs/
+wandb/
+
+# Merged checkpoints and generation logs: keep the folder layout, ignore contents
+tgrl/merged_checkpoints/**
+!tgrl/merged_checkpoints/**/
+!tgrl/merged_checkpoints/**/.gitkeep
+tgrl/logs/**
+!tgrl/logs/**/
+!tgrl/logs/**/.gitkeep
+!tgrl/logs/test_generation/read_parquet.py
+
+# LLM-judge outputs
+*_judged_*.jsonl
